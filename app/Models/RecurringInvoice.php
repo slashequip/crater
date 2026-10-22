@@ -44,28 +44,28 @@ class RecurringInvoice extends Model
 
     public function getFormattedStartsAtAttribute()
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->starts_at)->format($dateFormat);
     }
 
     public function getFormattedNextInvoiceAtAttribute()
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->next_invoice_at)->format($dateFormat);
     }
 
     public function getFormattedLimitDateAttribute()
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->limit_date)->format($dateFormat);
     }
 
     public function getFormattedCreatedAtAttribute()
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->created_at)->format($dateFormat);
     }

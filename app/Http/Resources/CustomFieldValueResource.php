@@ -53,7 +53,7 @@ class CustomFieldValueResource extends JsonResource
         }
 
         if ($key == 'date_answer') {
-            return $answer->format(CompanySetting::getSetting('carbon_date_format', $this->company_id));
+            return $answer->format(CompanySetting::getCarbonDateFormat($this->company_id));
         }
 
         return $answer;

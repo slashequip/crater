@@ -2,15 +2,15 @@
 
 namespace Crater\Http\Controllers\V1\Admin\Report;
 
-use PDF;
 use Carbon\Carbon;
-use Crater\Models\Company;
-use Crater\Models\Expense;
-use Crater\Models\Currency;
-use Illuminate\Http\Request;
-use Crater\Models\CompanySetting;
-use Illuminate\Support\Facades\App;
 use Crater\Http\Controllers\Controller;
+use Crater\Models\Company;
+use Crater\Models\CompanySetting;
+use Crater\Models\Currency;
+use Crater\Models\Expense;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use PDF;
 
 class ExpensesReportController extends Controller
 {
@@ -41,7 +41,7 @@ class ExpensesReportController extends Controller
             $totalAmount += $category->total_amount;
         }
 
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $company->id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($company->id);
         $from_date = Carbon::createFromFormat('Y-m-d', $request->from_date)->format($dateFormat);
         $to_date = Carbon::createFromFormat('Y-m-d', $request->to_date)->format($dateFormat);
         $currency = Currency::findOrFail(CompanySetting::getSetting('currency', $company->id));
