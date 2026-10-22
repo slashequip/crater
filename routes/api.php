@@ -78,13 +78,6 @@ use Crater\Http\Controllers\V1\Admin\Settings\TaxTypesController;
 use Crater\Http\Controllers\V1\Admin\Settings\UpdateCompanySettingsController;
 use Crater\Http\Controllers\V1\Admin\Settings\UpdateSettingsController;
 use Crater\Http\Controllers\V1\Admin\Settings\UpdateUserSettingsController;
-use Crater\Http\Controllers\V1\Admin\Update\CheckVersionController;
-use Crater\Http\Controllers\V1\Admin\Update\CopyFilesController;
-use Crater\Http\Controllers\V1\Admin\Update\DeleteFilesController;
-use Crater\Http\Controllers\V1\Admin\Update\DownloadUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\FinishUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\MigrateUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\UnzipUpdateController;
 use Crater\Http\Controllers\V1\Admin\Users\UsersController;
 use Crater\Http\Controllers\V1\Customer\Auth\ForgotPasswordController as AuthForgotPasswordController;
 use Crater\Http\Controllers\V1\Customer\Auth\ResetPasswordController as AuthResetPasswordController;
@@ -428,23 +421,6 @@ Route::prefix('/v1')->group(function () {
             Route::apiResource('roles', RolesController::class);
         });
 
-
-        // Self Update
-        //----------------------------------
-
-        Route::get('/check/update', CheckVersionController::class);
-
-        Route::post('/update/download', DownloadUpdateController::class);
-
-        Route::post('/update/unzip', UnzipUpdateController::class);
-
-        Route::post('/update/copy', CopyFilesController::class);
-
-        Route::post('/update/delete', DeleteFilesController::class);
-
-        Route::post('/update/migrate', MigrateUpdateController::class);
-
-        Route::post('/update/finish', FinishUpdateController::class);
 
         // Companies
         //-------------------------------------------------

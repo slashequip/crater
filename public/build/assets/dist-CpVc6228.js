@@ -1,0 +1,1 @@
+import{mt as e}from"./vue.runtime.esm-bundler-C_oe_-Pq.js";import{H as t}from"./main-B-yY-NH1.js";var n={name:`ValidateEach`,props:{rules:{type:Object,required:!0},state:{type:Object,required:!0},options:{type:Object,default:()=>({})},index:{type:Number,default:0}},setup(n,r){let{slots:i}=r,a=t(n.rules,e(n,`state`),n.options);return()=>i.default({v:a.value})}};export{n as t};

@@ -3,7 +3,7 @@
 namespace Crater\Models;
 
 use App;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Crater\Mail\SendInvoiceMail;
 use Crater\Services\SerialNumberFormatter;
@@ -34,15 +34,10 @@ class Invoice extends Model implements HasMedia
     public const STATUS_PARTIALLY_PAID = 'PARTIALLY_PAID';
     public const STATUS_PAID = 'PAID';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'invoice_date',
-        'due_date'
-    ];
-
     protected $casts = [
+        'deleted_at' => 'datetime',
+        'invoice_date' => 'datetime',
+        'due_date' => 'datetime',
         'total' => 'integer',
         'tax' => 'integer',
         'sub_total' => 'integer',
@@ -663,7 +658,7 @@ class Invoice extends Model implements HasMedia
         foreach ($templates as $key => $template) {
             $templateName = Str::before(basename($template), '.blade.php');
             $invoiceTemplates[$key]['name'] = $templateName;
-            $invoiceTemplates[$key]['path'] = vite_asset('img/PDF/'.$templateName.'.png');
+            $invoiceTemplates[$key]['path'] = asset('build/img/PDF/'.$templateName.'.png');
         }
 
         return $invoiceTemplates;

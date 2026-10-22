@@ -6,6 +6,7 @@ use Crater\Models\Expense;
 use Crater\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -37,7 +38,7 @@ test('create expense', function () {
 
     postJson('api/v1/expenses', $expense)->assertStatus(201);
 
-    $this->assertDatabaseHas('expenses', [
+    $this->assertMonetaryDatabaseHas('expenses', [
         'notes' => $expense['notes'],
         'expense_category_id' => $expense['expense_category_id'],
         'amount' => $expense['amount'],
@@ -129,7 +130,7 @@ test('delete multiple expenses', function () {
         ]);
 
     foreach ($expenses as $expense) {
-        $this->assertDeleted($expense);
+        $this->assertModelMissing($expense);
     }
 });
 
@@ -146,7 +147,7 @@ test('update expense with EUR currency', function () {
 
     putJson('api/v1/expenses/'.$expense->id, $expense2)->assertOk();
 
-    $this->assertDatabaseHas('expenses', [
+    $this->assertMonetaryDatabaseHas('expenses', [
         'id' => $expense->id,
         'expense_category_id' => $expense2['expense_category_id'],
         'amount' => $expense2['amount'],

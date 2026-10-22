@@ -20,9 +20,6 @@ class RecurringInvoice extends Model
         'id',
     ];
 
-    protected $dates = [
-        'starts_at'
-    ];
 
     public const NONE = 'NONE';
     public const COUNT = 'COUNT';
@@ -40,6 +37,7 @@ class RecurringInvoice extends Model
     ];
 
     protected $casts = [
+        'starts_at' => 'datetime',
         'exchange_rate' => 'float',
         'send_automatically' => 'boolean'
     ];
@@ -313,7 +311,7 @@ class RecurringInvoice extends Model
 
         $newInvoice['creator_id'] = $this->creator_id;
         $newInvoice['invoice_date'] = Carbon::today()->format('Y-m-d');
-        $newInvoice['due_date'] = Carbon::today()->addDays($days)->format('Y-m-d');
+        $newInvoice['due_date'] = Carbon::today()->addDays((int) $days)->format('Y-m-d');
         $newInvoice['status'] = Invoice::STATUS_DRAFT;
         $newInvoice['company_id'] = $this->company_id;
         $newInvoice['paid_status'] = Invoice::STATUS_UNPAID;

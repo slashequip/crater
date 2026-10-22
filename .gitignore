@@ -18,3 +18,9 @@ Homestead.yaml
 /.scribe
 !storage/fonts/.gitkeep
 .DS_Store
+
+/.phpunit.cache
+/.php-cs-fixer.cache
+
+/storage/fonts/*.ufm.json
+/storage/framework/testing/

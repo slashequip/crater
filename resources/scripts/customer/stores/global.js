@@ -29,7 +29,7 @@ export const useGlobalStore = defineStore({
             this.currency = response.data.data.currency
             this.enabledModules = response.data.meta.modules
             Object.assign(userStore.userForm, response.data.data)
-            window.i18n.locale = response.data.default_language
+            window.i18n.global.locale.value = response.data.default_language
             this.isAppLoaded = true
             resolve(response)
           })

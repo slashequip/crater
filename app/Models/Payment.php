@@ -2,7 +2,7 @@
 
 namespace Crater\Models;
 
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Crater\Jobs\GeneratePaymentPdfJob;
 use Crater\Mail\SendPaymentMail;
@@ -28,8 +28,6 @@ class Payment extends Model implements HasMedia
     public const PAYMENT_MODE_CREDIT_CARD = 'CREDIT_CARD';
     public const PAYMENT_MODE_BANK_TRANSFER = 'BANK_TRANSFER';
 
-    protected $dates = ['created_at', 'updated_at', 'payment_date'];
-
     protected $guarded = ['id'];
 
     protected $appends = [
@@ -39,6 +37,7 @@ class Payment extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'payment_date' => 'datetime',
         'notes' => 'string',
         'exchange_rate' => 'float'
     ];

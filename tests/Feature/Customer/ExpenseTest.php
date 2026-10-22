@@ -39,3 +39,13 @@ test('get customer expense', function () {
     getJson("/api/v1/{$customer->company->slug}/customer/expenses/{$expense->id}")
         ->assertOk();
 });
+
+
+test('customer expense counts include only that customer', function () {
+    $customer = Auth::guard('customer')->user();
+    Expense::factory()->create(['customer_id' => $customer->id, 'company_id' => $customer->company_id]);
+    Expense::factory()->create();
+
+    getJson("api/v1/{$customer->company->slug}/customer/expenses")
+        ->assertOk()->assertJsonPath('meta.expenseTotalCount', 1)->assertJsonCount(1, 'data');
+});

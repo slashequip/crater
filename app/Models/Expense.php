@@ -16,10 +16,6 @@ class Expense extends Model implements HasMedia
     use InteractsWithMedia;
     use HasCustomFieldsTrait;
 
-    protected $dates = [
-        'expense_date',
-    ];
-
     protected $guarded = ['id'];
 
     protected $appends = [
@@ -30,6 +26,7 @@ class Expense extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'expense_date' => 'datetime',
         'notes' => 'string',
         'exchange_rate' => 'float'
     ];
@@ -120,6 +117,11 @@ class Expense extends Model implements HasMedia
             'expenses.expense_date',
             [$start->format('Y-m-d'), $end->format('Y-m-d')]
         );
+    }
+
+    public function scopeWhereCustomer($query, $customerId)
+    {
+        return $query->where('expenses.customer_id', $customerId);
     }
 
     public function scopeWhereCategoryName($query, $search)

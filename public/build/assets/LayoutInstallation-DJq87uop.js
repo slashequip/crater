@@ -1,0 +1,1 @@
+import{B as e,K as t,S as n,h as r,k as i,v as a}from"./vue.runtime.esm-bundler-C_oe_-Pq.js";import{t as o}from"./NotificationRoot-4ggoy_IE.js";i();var s={class:`h-screen overflow-y-auto text-base`},c={class:`container mx-auto px-4`},l={__name:`LayoutInstallation`,setup(i){return(i,l)=>{let u=t(`router-view`);return e(),a(`div`,s,[n(o),r(`div`,c,[n(u)])])}}};export{l as default};

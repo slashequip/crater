@@ -13,16 +13,13 @@ class CustomField extends Model
         'id',
     ];
 
-    protected $dates = [
-        'date_answer',
-        'date_time_answer'
-    ];
-
     protected $appends = [
         'defaultAnswer',
     ];
 
     protected $casts = [
+        'date_answer' => 'datetime',
+        'date_time_answer' => 'datetime',
         'options' => 'array',
     ];
 
