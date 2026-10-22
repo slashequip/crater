@@ -1,16 +1,8 @@
 <?php
 
-use Crater\Models\Address;
-use Crater\Models\Customer;
-use Crater\Models\CustomField;
-use Crater\Models\CustomFieldValue;
-use Crater\Models\Estimate;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
-use Crater\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -23,58 +15,46 @@ class UpdateCustomerIdInAllTables extends Migration
      */
     public function up()
     {
-        $users = User::where('role', 'customer')
-            ->get();
+        // Copy stored columns only. Serializing today's User model invokes HTTP
+        // date/avatar accessors and includes attributes absent from this schema.
+        // Query builder inserts also preserve password hashes and timestamps.
+        $columns = array_diff(Schema::getColumnListing('customers'), ['id']);
 
-        $users->makeVisible('password', 'remember_token');
+        DB::transaction(function () use ($columns) {
+            DB::table('users')->where('role', 'customer')->orderBy('id')
+                ->chunkById(100, function ($users) use ($columns) {
+                    foreach ($users as $user) {
+                        $attributes = array_intersect_key((array) $user, array_flip($columns));
+                        $customerId = DB::table('customers')->insertGetId($attributes);
 
-        if ($users) {
-            foreach ($users as $user) {
-                $newCustomer = Customer::create($user->toArray());
+                        foreach (['addresses', 'expenses', 'estimates', 'invoices', 'payments'] as $table) {
+                            DB::table($table)->where('user_id', $user->id)->update([
+                                'customer_id' => $customerId,
+                                'user_id' => null,
+                            ]);
+                        }
 
-                Address::where('user_id', $user->id)->update([
-                    'customer_id' => $newCustomer->id,
-                    'user_id' => null
+                        DB::table('custom_field_values')
+                            ->where('custom_field_valuable_id', $user->id)
+                            ->where('custom_field_valuable_type', 'Crater\\Models\\User')
+                            ->update([
+                                'custom_field_valuable_type' => 'Crater\\Models\\Customer',
+                                'custom_field_valuable_id' => $customerId,
+                            ]);
+
+                        DB::table('media')->where('model_id', $user->id)
+                            ->where('model_type', 'Crater\\Models\\User')
+                            ->update(['model_type' => 'Crater\\Models\\Customer', 'model_id' => $customerId]);
+                    }
+                });
+
+            foreach (DB::table('custom_fields')->where('model_type', 'User')->get() as $field) {
+                DB::table('custom_fields')->where('id', $field->id)->update([
+                    'model_type' => 'Customer',
+                    'slug' => Str::upper('CUSTOM_Customer_'.Str::slug($field->label, '_')),
                 ]);
-
-                Expense::where('user_id', $user->id)->update([
-                    'customer_id' => $newCustomer->id,
-                    'user_id' => null
-                ]);
-
-                Estimate::where('user_id', $user->id)->update([
-                    'customer_id' => $newCustomer->id,
-                    'user_id' => null
-                ]);
-
-                Invoice::where('user_id', $user->id)->update([
-                    'customer_id' => $newCustomer->id,
-                    'user_id' => null
-                ]);
-
-                Payment::where('user_id', $user->id)->update([
-                    'customer_id' => $newCustomer->id,
-                    'user_id' => null
-                ]);
-
-                CustomFieldValue::where('custom_field_valuable_id', $user->id)
-                    ->where('custom_field_valuable_type', 'Crater\Models\User')
-                    ->update([
-                        'custom_field_valuable_type' => 'Crater\Models\Customer',
-                        'custom_field_valuable_id' => $newCustomer->id
-                    ]);
             }
-
-            $customFields = CustomField::where('model_type', 'User')->get();
-
-            if ($customFields) {
-                foreach ($customFields as $customField) {
-                    $customField->model_type = "Customer";
-                    $customField->slug = Str::upper('CUSTOM_'.$customField->model_type.'_'.Str::slug($customField->label, '_'));
-                    $customField->save();
-                }
-            }
-        }
+        });
 
         Schema::table('estimates', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
@@ -100,8 +80,7 @@ class UpdateCustomerIdInAllTables extends Migration
             $table->dropColumn('unit');
         });
 
-        $users = User::where('role', 'customer')
-            ->delete();
+        DB::table('users')->where('role', 'customer')->delete();
     }
 
     /**

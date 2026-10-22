@@ -104,7 +104,7 @@ class Item extends Model
 
     public function getFormattedCreatedAtAttribute($value)
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', request()->header('company'));
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id ?? request()->header('company'));
 
         return Carbon::parse($this->created_at)->format($dateFormat);
     }

@@ -53,6 +53,11 @@ class CompanySetting extends Model
             });
     }
 
+    public static function getCarbonDateFormat($company_id): string
+    {
+        return static::getSetting('carbon_date_format', $company_id) ?: 'Y/m/d';
+    }
+
     public static function getSetting($key, $company_id)
     {
         $setting = static::whereOption($key)->whereCompany($company_id)->first();

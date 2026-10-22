@@ -5,6 +5,7 @@
     <testsuites>
         <testsuite name="Unit"><directory suffix="Test.php">tests/Unit</directory></testsuite>
         <testsuite name="Feature"><directory suffix="Test.php">tests/Feature</directory></testsuite>
+        <testsuite name="Upgrade"><directory suffix="Test.php">tests/Upgrade</directory></testsuite>
     </testsuites>
     <source><include><directory suffix=".php">app</directory></include></source>
     <php>

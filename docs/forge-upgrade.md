@@ -63,6 +63,35 @@ The original local storage root remains `storage/app`, including the
 `database_created` installation marker. Do not replace it with a new Laravel
 application skeleton or move existing files.
 
+### Recovering the customer migration failure
+
+If Forge reports `Carbon::format(): Argument #1 ($format) must be of type string,
+null given` in `2021_06_30_062411_update_customer_id_in_all_tables`, deploy the
+fixed revision and run the normal `php artisan migrate --force` step again.
+Laravel skips the migrations already recorded as successful. This particular
+failure happens while serializing the first legacy customer, before its insert
+or any destructive schema changes in that migration. Do not reset the database
+or roll back the successful migrations to retry it.
+
+The corrected migration copies stored columns directly, preserving password
+hashes and original timestamps, and transfers document/address references,
+custom fields and media ownership. Date formatting now defaults to Crater's
+`Y/m/d` format when company settings or an HTTP company header are absent.
+Subsequent historical migrations also preserve each company's numbering
+settings and normalize nullable customer portal flags before changing the column.
+
+The automated Upgrade suite builds a populated database at the exact migration
+boundary shown in this Forge failure, then runs all outstanding migrations and
+checks the stored records on SQLite and MySQL. It covers two companies with
+different numbering prefixes and a customer with legacy NULL portal settings.
+
+The npm deprecation, Sass, Tailwind and bundle-size notices in the supplied log
+do not cause this deployment failure. The build completes successfully before
+the migration fails. The 15 npm advisories affect development/build dependencies;
+`npm audit --omit=dev` reports zero runtime findings. Production assets are already
+committed, so the documented Forge deployment does not require `npm ci` or a
+frontend build on the server.
+
 ## Production cutover
 
 Use the existing Forge site. Do not delete and recreate its repository/site.
@@ -137,9 +166,9 @@ invoice before bringing the site up and resuming background work.
 
 Validation completed locally:
 
-- 263 tests / 545 assertions passed on PHP 8.4 with SQLite.
-- 263 tests / 545 assertions passed on PHP 8.5 with SQLite.
-- 263 tests / 545 assertions passed on PHP 8.5 with MySQL 8.0.
+- 282 tests / 644 assertions passed on PHP 8.4 with SQLite.
+- 282 tests / 644 assertions passed on PHP 8.5 with SQLite.
+- 282 tests / 644 assertions passed on PHP 8.5 with MySQL 8.0.
 - A clean `composer install --no-dev` boots Laravel 13.38 and compiles views.
 - A clean `npm ci && npm run build` reproduces the production manifest.
 - Composer and production npm dependency audits report no known vulnerabilities.

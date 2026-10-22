@@ -63,14 +63,14 @@ class Expense extends Model implements HasMedia
 
     public function getFormattedExpenseDateAttribute($value)
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->expense_date)->format($dateFormat);
     }
 
     public function getFormattedCreatedAtAttribute($value)
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->created_at)->format($dateFormat);
     }

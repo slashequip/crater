@@ -93,14 +93,14 @@ class Estimate extends Model implements HasMedia
 
     public function getFormattedExpiryDateAttribute($value)
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->expiry_date)->format($dateFormat);
     }
 
     public function getFormattedEstimateDateAttribute($value)
     {
-        $dateFormat = CompanySetting::getSetting('carbon_date_format', $this->company_id);
+        $dateFormat = CompanySetting::getCarbonDateFormat($this->company_id);
 
         return Carbon::parse($this->estimate_date)->format($dateFormat);
     }
