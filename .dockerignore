@@ -8,3 +8,13 @@ docker-compose.*
 LICENSE
 nginx.conf
 yarn.lock
+
+.env
+.env.*
+!.env.example
+!uffizzi/.env.example
+vendor/
+node_modules/
+storage/logs/
+storage/framework/testing/
+.phpunit.cache/

@@ -4,7 +4,7 @@ use Crater\Http\Controllers\V1\Admin\Users\UsersController;
 use Crater\Http\Requests\UserRequest;
 use Crater\Models\User;
 use Laravel\Sanctum\Sanctum;
-use function Pest\Faker\faker;
+
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -37,10 +37,10 @@ test('store user using a form request', function () {
 
 // test('store user', function () {
 //     $data = [
-//         'name' => faker()->name,
-//         'email' => faker()->unique()->safeEmail,
-//         'phone' => faker()->phoneNumber,
-//         'password' => faker()->password
+//         'name' => fake()->name,
+//         'email' => fake()->unique()->safeEmail,
+//         'phone' => fake()->phoneNumber,
+//         'password' => fake()->password
 //     ];
 
 //     postJson('/api/v1/users', $data)->assertOk();
@@ -70,10 +70,10 @@ test('update user using a form request', function () {
 //     $user = User::factory()->create();
 
 //     $data = [
-//         'name' => faker()->name,
-//         'email' => faker()->unique()->safeEmail,
-//         'phone' => faker()->phoneNumber,
-//         'password' => faker()->password
+//         'name' => fake()->name,
+//         'email' => fake()->unique()->safeEmail,
+//         'phone' => fake()->phoneNumber,
+//         'password' => fake()->password
 //     ];
 
 //     putJson("/api/v1/users/{$user->id}", $data)->assertOk();
@@ -92,5 +92,5 @@ test('update user using a form request', function () {
 //     postJson("/api/v1/users/delete", $data)
 //         ->assertOk();
 
-//     $this->assertDeleted($user);
+//     $this->assertModelMissing($user);
 // });

@@ -2,6 +2,7 @@
 
 namespace Crater\Providers;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
@@ -32,7 +33,9 @@ class DropboxServiceProvider extends ServiceProvider
                 $config['token']
             );
 
-            return new Filesystem(new DropboxAdapter($client));
+            $adapter = new DropboxAdapter($client);
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
         });
     }
 }

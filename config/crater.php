@@ -17,7 +17,7 @@ return [
     /*
     * Minimum php version.
     */
-    'min_php_version' => '7.4.0',
+    'min_php_version' => '8.4.0',
 
     /*
     * Minimum mysql version.
@@ -261,16 +261,6 @@ return [
             'name' => 'Backup',
             'link' => '/admin/settings/backup',
             'icon' => 'DatabaseIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
-        ],
-        [
-            'title' => 'settings.menu_title.update_app',
-            'group' => '',
-            'name' => 'Update App',
-            'link' => '/admin/settings/update-app',
-            'icon' => 'RefreshIcon',
             'owner_only' => true,
             'ability' => '',
             'model' => ''

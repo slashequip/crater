@@ -2,36 +2,68 @@ name: CI
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
-  build-test:
+  backend:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0']
-
+        php: ['8.4', '8.5']
     name: PHP ${{ matrix.php }}
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, exif, fileinfo, gd, mbstring, pdo_sqlite, zip
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: composer check-platform-reqs
+      - run: vendor/bin/pest --compact
 
-    - name: Install dependencies
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: exif
+  mysql:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testing
+          MYSQL_DATABASE: crater_test
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ptesting"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+    env:
+      CRATER_TEST_MYSQL: '1'
+      DB_HOST: 127.0.0.1
+      DB_PORT: '3306'
+      DB_USERNAME: root
+      DB_PASSWORD: testing
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: bcmath, exif, fileinfo, gd, mbstring, pdo_mysql, pdo_sqlite, zip
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: vendor/bin/pest --configuration phpunit.mysql.xml --compact
 
-    - name: Install PHP 7 dependencies
-      run: composer update --no-interaction --no-progress
-      if: "matrix.php < 8"
-
-    - name: Install PHP 8 dependencies
-      run: composer update --ignore-platform-req=php --no-interaction --no-progress
-      if: "matrix.php >= 8"
-
-    - name: Check coding style
-      run: ./vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no --config=.php-cs-fixer.dist.php
-
-    - name: Unit Tests
-      run: php ./vendor/bin/pest
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Verify committed production assets
+        run: |
+          git diff --exit-code -- public/build
+          test -z "$(git ls-files --others --exclude-standard public/build)"

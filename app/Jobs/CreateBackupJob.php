@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Spatie\Backup\Config\Config as BackupConfig;
 use Spatie\Backup\Tasks\Backup\BackupJobFactory;
 
 class CreateBackupJob implements ShouldQueue
@@ -43,7 +44,7 @@ class CreateBackupJob implements ShouldQueue
 
         config(['backup.backup.destination.disks' => [$prefix.$fileDisk->driver]]);
 
-        $backupJob = BackupJobFactory::createFromArray(config('backup'));
+        $backupJob = BackupJobFactory::createFromConfig(BackupConfig::fromArray(config('backup')));
 
         if ($this->data['option'] === 'only-db') {
             $backupJob->dontBackupFilesystem();

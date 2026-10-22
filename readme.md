@@ -1,3 +1,7 @@
+> **Maintained fork:** Laravel 13 with PHP 8.4/8.5 support. The in-app updater has
+> been removed. See [Forge upgrade and rollback instructions](docs/forge-upgrade.md)
+> before updating an existing installation. Frontend builds use npm and Node 22.12+.
+
 <img src="https://res.cloudinary.com/bytefury/image/upload/v1574149856/Crater/craterframe.png">
 
 ## Introduction

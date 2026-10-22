@@ -42,7 +42,7 @@ class CloneInvoiceController extends Controller
                 'invoice_due_date_days',
                 $request->header('company')
             );
-            $due_date = Carbon::now()->addDays($dueDateDays)->format('Y-m-d');
+            $due_date = Carbon::now()->addDays((int) $dueDateDays)->format('Y-m-d');
         }
 
         $exchange_rate = $invoice->exchange_rate;

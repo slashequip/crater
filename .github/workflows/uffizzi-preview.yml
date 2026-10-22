@@ -10,6 +10,7 @@ on:
 
 jobs:
   cache-compose-file:
+    if: ${{ vars.ENABLE_UFFIZZI_PREVIEWS == 'true' }}
     name: Cache Compose File
     runs-on: ubuntu-latest
     outputs:
@@ -18,7 +19,7 @@ jobs:
     steps:
       - name: 'Download artifacts'
         # Fetch output (zip archive) from the workflow run that triggered this workflow.
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -51,7 +52,7 @@ jobs:
         run: echo "COMPOSE_FILE_HASH=$(md5sum docker-compose.rendered.yml | awk '{ print $1 }')" >> $GITHUB_ENV
       - name: Cache Rendered Compose File
         if: ${{ fromJSON(env.EVENT_JSON).action != 'closed' }}
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: docker-compose.rendered.yml
           key: ${{ env.COMPOSE_FILE_HASH }}

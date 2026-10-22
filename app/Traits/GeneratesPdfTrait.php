@@ -26,7 +26,7 @@ trait GeneratesPdfTrait
 
         $pdf = $this->getPDFData();
 
-        return response()->make($pdf->stream(), 200, [
+        return response()->make($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$this[$collection_name.'_number'].'.pdf"',
         ]);
@@ -159,7 +159,7 @@ trait GeneratesPdfTrait
         }
 
         foreach ($fields as $key => $field) {
-            $fields[$key] = htmlspecialchars($field, ENT_QUOTES, 'UTF-8');
+            $fields[$key] = htmlspecialchars((string) $field, ENT_QUOTES, 'UTF-8');
         }
 
         return $fields;

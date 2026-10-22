@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from '@/scripts/App.vue'
-import { createI18n } from 'vue-i18n'
+import createI18n from '@/scripts/plugins/i18n'
 import messages from '@/scripts/locales/locales'
 import router from '@/scripts/router/index'
 import { defineGlobalComponents } from './global-components'
@@ -38,12 +38,7 @@ export default class Crater {
 
     app.provide('$utils', utils)
 
-    const i18n = createI18n({
-      locale: 'en',
-      fallbackLocale: 'en',
-      globalInjection: true,
-      messages: this.messages,
-    })
+    const i18n = createI18n(this.messages)
 
     window.i18n = i18n
 
@@ -52,6 +47,7 @@ export default class Crater {
     app.use(router)
     app.use(Maska)
     app.use(i18n)
+    app.config.globalProperties.$tc = i18n.global.tc
     app.use(createPinia())
     app.provide('utils', utils)
     app.directive('tooltip', VTooltip)

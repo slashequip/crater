@@ -16,7 +16,12 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', env('MAIL_MAILER', 'smtp')),
+
+    // Preserve existing SMTP encryption settings with Symfony Mailer.
+    'scheme' => env('MAIL_ENCRYPTION', 'tls') === 'ssl' ? 'smtps' : 'smtp',
+    'auto_tls' => env('MAIL_ENCRYPTION', 'tls') === 'tls',
+    'require_tls' => env('MAIL_ENCRYPTION', 'tls') === 'tls',
 
     /*
     |--------------------------------------------------------------------------

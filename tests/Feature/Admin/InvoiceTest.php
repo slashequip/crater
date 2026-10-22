@@ -242,7 +242,7 @@ test('delete multiple invoices', function () {
         ]);
 
     foreach ($invoices as $invoice) {
-        $this->assertDeleted($invoice);
+        $this->assertModelMissing($invoice);
     }
 });
 
@@ -431,7 +431,7 @@ test('update invoice with EUR currency', function () {
 
     putJson('api/v1/invoices/'.$invoice->id, $invoice2)->assertOk();
 
-    $this->assertDatabaseHas('invoices', [
+    $this->assertMonetaryDatabaseHas('invoices', [
         'id' => $invoice['id'],
         'invoice_number' => $invoice2['invoice_number'],
         'sub_total' => $invoice2['sub_total'],
@@ -444,7 +444,7 @@ test('update invoice with EUR currency', function () {
         'base_total' => $invoice2['base_total'],
     ]);
 
-    $this->assertDatabaseHas('invoice_items', [
+    $this->assertMonetaryDatabaseHas('invoice_items', [
         'invoice_id' => $invoice2['items'][0]['invoice_id'],
         'item_id' => $invoice2['items'][0]['item_id'],
         'name' => $invoice2['items'][0]['name'],
@@ -453,7 +453,7 @@ test('update invoice with EUR currency', function () {
         'base_total' => $invoice2['items'][0]['base_total'],
     ]);
 
-    $this->assertDatabaseHas('taxes', [
+    $this->assertMonetaryDatabaseHas('taxes', [
         'amount' => $invoice2['taxes'][0]['amount'],
         'name' => $invoice2['taxes'][0]['name'],
         'base_amount' => $invoice2['taxes'][0]['base_amount'],

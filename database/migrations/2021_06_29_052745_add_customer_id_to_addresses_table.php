@@ -27,9 +27,7 @@ class AddCustomerIdToAddressesTable extends Migration
     public function down()
     {
         Schema::table('addresses', function (Blueprint $table) {
-            if (config('database.default') !== 'sqlite') {
-                $table->dropForeign(['customer_id']);
-            }
+            $table->dropForeign(['customer_id']);
             $table->dropColumn('customer_id');
         });
     }

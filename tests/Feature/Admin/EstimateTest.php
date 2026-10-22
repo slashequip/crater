@@ -259,7 +259,7 @@ test('delete multiple estimates', function () {
         ]);
 
     foreach ($estimates as $estimate) {
-        $this->assertDeleted($estimate);
+        $this->assertModelMissing($estimate);
     }
 });
 
@@ -415,7 +415,7 @@ test('update estimate with EUR currency', function () {
 
     $response = putJson('api/v1/estimates/'.$estimate->id, $estimate2);
 
-    $this->assertDatabaseHas('estimates', [
+    $this->assertMonetaryDatabaseHas('estimates', [
         'id' => $estimate['id'],
         'template_name' => $estimate2['template_name'],
         'estimate_number' => $estimate2['estimate_number'],
@@ -433,7 +433,7 @@ test('update estimate with EUR currency', function () {
         'base_tax' => $estimate2['base_tax'],
     ]);
 
-    $this->assertDatabaseHas('estimate_items', [
+    $this->assertMonetaryDatabaseHas('estimate_items', [
         'estimate_id' => $estimate2['items'][0]['estimate_id'],
         'exchange_rate' => $estimate2['items'][0]['exchange_rate'],
         'base_price' => $estimate2['items'][0]['base_price'],

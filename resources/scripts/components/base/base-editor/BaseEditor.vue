@@ -651,7 +651,7 @@ export default {
     const editor = useEditor({
       content: props.modelValue,
       extensions: [
-        StarterKit,
+        StarterKit.configure({ link: false, underline: false, trailingNode: false }),
         TextAlign.configure({
           types: ['heading', 'paragraph'],
           alignments: ['left', 'right', 'center', 'justify'],
@@ -672,7 +672,7 @@ export default {
           return
         }
 
-        editor.value.commands.setContent(props.modelValue, false)
+        editor.value.commands.setContent(props.modelValue, { emitUpdate: false })
       }
     )
 

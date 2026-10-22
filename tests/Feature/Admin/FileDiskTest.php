@@ -4,6 +4,7 @@ use Crater\Models\FileDisk;
 use Crater\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -33,8 +34,11 @@ test('create file disk', function () {
 
     $response = postJson('/api/v1/disks', $disk);
 
-    $disk['credentials'] = json_encode($disk['credentials']);
+    $credentials = $disk['credentials'];
+    unset($disk['credentials']);
+    $response->assertCreated();
     $this->assertDatabaseHas('file_disks', $disk);
+    expect(json_decode(FileDisk::where('name', $disk['name'])->firstOrFail()->credentials, true))->toEqual($credentials);
 });
 
 
@@ -45,9 +49,10 @@ test('update file disk', function () {
 
     $response = putJson("/api/v1/disks/{$disk->id}", $disk2)->assertStatus(200);
 
-    $disk2['credentials'] = json_encode($disk2['credentials']);
-
+    $credentials = $disk2['credentials'];
+    unset($disk2['credentials']);
     $this->assertDatabaseHas('file_disks', $disk2);
+    expect(json_decode($disk->fresh()->credentials, true))->toEqual($credentials);
 });
 
 

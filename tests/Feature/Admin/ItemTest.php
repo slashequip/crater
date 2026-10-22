@@ -7,6 +7,7 @@ use Crater\Models\Tax;
 use Crater\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
@@ -39,7 +40,7 @@ test('create item', function () {
         ],
     ]);
 
-    $response = postJson('api/v1/items', $item);
+    $response = postJson('api/v1/items', $item)->assertOk();
 
     $this->assertDatabaseHas('items', [
         'name' => $item['name'],
@@ -121,7 +122,7 @@ test('delete multiple items', function () {
     postJson("/api/v1/items/delete", $data)->assertOk();
 
     foreach ($items as $item) {
-        $this->assertDeleted($item);
+        $this->assertModelMissing($item);
     }
 });
 

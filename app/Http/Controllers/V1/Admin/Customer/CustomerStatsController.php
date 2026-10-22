@@ -38,13 +38,13 @@ class CustomerStatsController extends Controller
         $terms = explode('-', $fiscalYear);
 
         if ($terms[0] <= $start->month) {
-            $startDate->month($terms[0])->startOfMonth();
-            $start->month($terms[0])->startOfMonth();
-            $end->month($terms[0])->endOfMonth();
+            $startDate->month((int) $terms[0])->startOfMonth();
+            $start->month((int) $terms[0])->startOfMonth();
+            $end->month((int) $terms[0])->endOfMonth();
         } else {
-            $startDate->subYear()->month($terms[0])->startOfMonth();
-            $start->subYear()->month($terms[0])->startOfMonth();
-            $end->subYear()->month($terms[0])->endOfMonth();
+            $startDate->subYear()->month((int) $terms[0])->startOfMonth();
+            $start->subYear()->month((int) $terms[0])->startOfMonth();
+            $end->subYear()->month((int) $terms[0])->endOfMonth();
         }
 
         if ($request->has('previous_year')) {

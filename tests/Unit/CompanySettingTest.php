@@ -3,7 +3,6 @@
 use Crater\Models\Company;
 use Crater\Models\CompanySetting;
 use Illuminate\Support\Facades\Artisan;
-use function Pest\Faker\faker;
 
 beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
@@ -17,9 +16,9 @@ test('company setting belongs to company', function () {
 });
 
 test('set settings', function () {
-    $key = faker()->name;
+    $key = fake()->name;
 
-    $value = faker()->word;
+    $value = fake()->word;
 
     $company = Company::factory()->create();
 
@@ -31,9 +30,9 @@ test('set settings', function () {
 });
 
 test('get settings', function () {
-    $key = faker()->name;
+    $key = fake()->name;
 
-    $value = faker()->word;
+    $value = fake()->word;
 
     $company = Company::factory()->create();
 
